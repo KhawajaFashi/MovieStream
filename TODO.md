@@ -30,11 +30,11 @@
 - [x] **Global Error Handling:** Create global error-handling middleware.
 - [x] **Async Error Wrapper:** Use an async error wrapper (`catchAsync`).
 - [x] **File Handling:** Implement image upload functionality.
-- [ ] **Notifications:** Integrate email notifications.
+- [x] **Notifications:** Integrate email notifications.
 
 ## 5. Security Measures
 - [x] **CORS:** Configure Cross-Origin Resource Sharing.
-- [ ] **Sanitization:** Implement input sanitization to prevent NoSQL injection.
+- [x] **Sanitization:** Implement input sanitization to prevent NoSQL injection.
 - [x] **Rate Limiting:** Implement rate limiting to prevent brute-force attacks.
 
 ## 6. Testing & Deployment

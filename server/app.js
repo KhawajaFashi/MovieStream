@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { verifyToken } from './middleware/Authentication.js';
 import { restrictAccessLoggedInUser } from './middleware/Authorization.js';
 import limiter from './middleware/RateLimiting.js';
+import mongoSanitize from 'express-mongo-sanitize';
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,7 @@ connection(process.env.mongoURI)
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(mongoSanitize());
 app.use(verifyToken);
 
 const allowedOrigins = ['http://localhost:5173', 'https://yourclientapp.com'];
