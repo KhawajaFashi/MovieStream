@@ -8,6 +8,7 @@ import connection from './config/connection.js';
 import cookieParser from 'cookie-parser';
 import { verifyToken } from './middleware/Authentication.js';
 import { restrictAccessLoggedInUser } from './middleware/Authorization.js';
+import limiter from './middleware/RateLimiting.js';
 dotenv.config();
 
 const app = express();
@@ -34,8 +35,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+
+app.use(limiter);
+
 app.use('/api/user', userRouter);
-app.use('/api/movies', moviesRouter);
+app.use('/api/movies',restrictAccessLoggedInUser, moviesRouter);
 app.use('/api/dashboard', dashboardRouter);
 
 app.listen(PORT, () => console.log("Server is running at PORT:", PORT))
