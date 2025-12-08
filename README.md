@@ -1,6 +1,8 @@
-# Movie Database Application
+*# Movie Database Application
 
 A full-stack web application for managing and displaying movie information with search, filtering, and pagination capabilities.
+
+**Live Demo**: [https://movie-stream-sable.vercel.app/](https://movie-stream-sable.vercel.app/)
 
 ## Project Structure
 
@@ -248,3 +250,4 @@ This project is part of Assignment 4.
 ## Contributing
 
 For contributions, please follow the existing code structure and naming conventions.
+*
