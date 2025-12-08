@@ -17,7 +17,7 @@ const Navbar = ({ user, logout }) => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <Link to="/" className="flex items-center space-x-2 text-indigo-500 hover:text-indigo-400 transition-colors">
-                        <img src='../../public/movie.png' className="w-8 h-8" alt="Logo" />
+                        <img src='/movie.png' className="w-8 h-8" alt="Logo" />
                         <span className="text-xl font-bold tracking-tight text-white">MovieStream</span>
                     </Link>
 
@@ -38,6 +38,12 @@ const Navbar = ({ user, logout }) => {
                                 >
                                     <User className="w-4 h-4" />
                                     <span>Profile</span>
+                                </Link>
+                                <Link
+                                    to="/add-movie"
+                                    className="flex items-center space-x-1 text-slate-300 hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium"
+                                >
+                                    <span>Add Movie</span>
                                 </Link>
                                 <div className="flex items-center space-x-2 border-l border-slate-700 pl-4 ml-2">
                                     <div className="flex flex-col items-end">

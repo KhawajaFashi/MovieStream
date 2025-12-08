@@ -17,35 +17,35 @@
 - [x] **Protection:** Create middleware to protect routes (verify JWT).
 
 ## 3. Core Features (CRUD & Logic)
-- [ ] **Main Entity CRUD:** Implement Create, Read, Update, and Delete operations for your main entity (e.g., posts, products, tasks).
+- [x] **Main Entity CRUD:** Implement Create, Read, Update, and Delete operations for your main entity (e.g., posts, products, tasks).
 - [x] **Pagination:** Implement pagination (`?page=` and `?limit=`).
 - [x] **Search and Filtering:** Implement search and filtering (`?search=` and `?sort=`).
-- [ ] **Ownership Logic:** Ensure users can only edit or delete their *own* items.
+- [x] **Ownership Logic:** Ensure users can only edit or delete their *own* items.
 - [x] **Dashboard:** Create a protected dashboard displaying data analytics (counts, charts, comparisons).
-- [ ] **User Profile:** Allow users to update profiles and reset/change passwords.
+- [x] **User Profile:** Allow users to update profiles and reset/change passwords.
 
 ## 4. API & Backend Implementation
 - [x] **RESTful Standards:** Ensure all routes follow RESTful conventions with correct HTTP status codes.
-- [ ] **Validation:** Implement input validation using libraries like Joi, validator.js, or custom logic.
-- [ ] **Global Error Handling:** Create global error-handling middleware.
-- [ ] **Async Error Wrapper:** Use an async error wrapper (`catchAsync`).
-- [ ] **File Handling:** Implement image upload functionality.
+- [x] **Validation:** Implement input validation using libraries like Joi, validator.js, or custom logic.
+- [x] **Global Error Handling:** Create global error-handling middleware.
+- [x] **Async Error Wrapper:** Use an async error wrapper (`catchAsync`).
+- [x] **File Handling:** Implement image upload functionality.
 - [ ] **Notifications:** Integrate email notifications.
 
 ## 5. Security Measures
 - [x] **CORS:** Configure Cross-Origin Resource Sharing.
 - [ ] **Sanitization:** Implement input sanitization to prevent NoSQL injection.
-- [ ] **Rate Limiting:** Implement rate limiting to prevent brute-force attacks.
+- [x] **Rate Limiting:** Implement rate limiting to prevent brute-force attacks.
 
 ## 6. Testing & Deployment
-- [ ] **Testing:** Write a unit test for at least one **POST** and one **PATCH** API route using Jest, Supertest, or Cypress.
-- [ ] **Frontend Deployment:** Deploy your frontend to **Vercel** or **Netlify**.
+- [x] **Testing:** Write a unit test for at least one **POST** and one **PATCH** API route using Jest, Supertest, or Cypress.
+- [x] **Frontend Deployment:** Deploy your frontend to **Vercel** or **Netlify**.
 
 ## 7. Submission Guidelines
 - [ ] **Format:** Submit a zipped folder containing your files.
 - [ ] **Repository:** Include a link to your **public GitHub Repository**.
-- [ ] **Strict Warning:** Do not use AI-generated code or plagiarize; you must be able to justify every part of your implementation.
+- [x] **Strict Warning:** Do not use AI-generated code or plagiarize; you must be able to justify every part of your implementation.
 
 ## Bonus / Recommended Learning
-- [ ] **Redis:** Explore implementing basic caching for an API route.
+- [x] **Redis:** Explore implementing basic caching for an API route.
 - [ ] **Docker:** Try containerizing the application (Frontend, Backend, Database).

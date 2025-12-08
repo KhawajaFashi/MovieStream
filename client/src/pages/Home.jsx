@@ -39,7 +39,7 @@ const Home = ({ user }) => {
                 // Assuming response structure: { movies: [], totalPages: 5, currentPage: 1 }
                 // Adjust based on actual API response
                 setMovies(response.data.movies || response.data.data || []);
-                console.log("Fetched movies:",response.data || []);
+                console.log("Fetched movies:", response.data || []);
                 setTotalPages(response.data.pagination.totalPages || 1);
 
             } catch (err) {
@@ -90,6 +90,19 @@ const Home = ({ user }) => {
 
     const handlePageChange = (newPage) => {
         setSearchParams({ page: newPage, search, sort });
+    };
+
+    const handleDeleteMovie = async (movieId) => {
+        if (!window.confirm("Are you sure you want to delete this movie?")) return;
+
+        try {
+            await api.delete(`/movies/${movieId}`);
+            // Refresh movies list
+            setMovies(prev => prev.filter(m => (m._id || m.id) !== movieId));
+        } catch (error) {
+            console.error("Failed to delete movie", error);
+            alert("Failed to delete movie");
+        }
     };
 
     return (
@@ -171,6 +184,8 @@ const Home = ({ user }) => {
                                     key={movie._id || movie.id}
                                     movie={movie}
                                     onClick={(m) => setSelectedMovie(m)}
+                                    isAdmin={user?.role === 'admin'}
+                                    onDelete={handleDeleteMovie}
                                 />
                             ))}
                         </div>

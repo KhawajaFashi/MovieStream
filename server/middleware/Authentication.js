@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken"
 
 
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies?.uid;
+    const token = req.cookies?.uid || req.headers?.authorization?.split(" ")[1];
     const secret = process.env.secret;
     try {
         const userToken = jwt.verify(token, secret);

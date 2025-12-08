@@ -1,10 +1,14 @@
-import { Star, Calendar } from 'lucide-react';
+import { Star, Calendar, Trash2 } from 'lucide-react';
 
-const MovieCard = ({ movie, onClick }) => {
+const MovieCard = ({ movie, onClick, isAdmin, onDelete }) => {
     // console.log(movie)
     return (
         <div
-            onClick={() => onClick && onClick(movie)}
+            onClick={(e) => {
+                // If delete button was clicked, don't trigger the main onClick
+                if (e.target.closest('.delete-btn')) return;
+                onClick && onClick(movie);
+            }}
             className="group relative bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
         >
             {/* Image Container */}
@@ -19,9 +23,23 @@ const MovieCard = ({ movie, onClick }) => {
 
             {/* Content */}
             <div className="p-4">
-                <h3 className="text-lg font-bold text-white mb-1 line-clamp-1 group-hover:text-indigo-400 transition-colors">
-                    {movie.title}
-                </h3>
+                <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:text-indigo-400 transition-colors flex-1">
+                        {movie.title}
+                    </h3>
+                    {isAdmin && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete && onDelete(movie._id || movie.id);
+                            }}
+                            className="delete-btn p-1.5 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 ml-2"
+                            title="Delete Movie"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
 
                 <div className="flex items-center justify-between text-slate-400 text-sm mb-3">
                     <div className="flex items-center space-x-1">

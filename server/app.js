@@ -33,13 +33,20 @@ const corsOptions = {
     credentials: true,
 };
 
+
 app.use(cors(corsOptions));
 
+if (process.env.NODE_ENV === "production") {
+    app.use(limiter);
+}
 
-app.use(limiter);
+
+import globalErrorHandler from './middleware/error.js';
 
 app.use('/api/user', userRouter);
-app.use('/api/movies',restrictAccessLoggedInUser, moviesRouter);
+app.use('/api/movies', restrictAccessLoggedInUser, moviesRouter);
 app.use('/api/dashboard', dashboardRouter);
+
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => console.log("Server is running at PORT:", PORT))

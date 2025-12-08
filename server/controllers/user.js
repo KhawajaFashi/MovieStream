@@ -1,22 +1,18 @@
 import User from "../models/user.js";
 import { setUser } from "../service/auth.js";
 import { decryptPassword, encryptPassword } from "../utils/HashPassword.js";
+import catchAsync from "../utils/catchAsync.js";
+import AppError from "../utils/AppError.js";
 
-export const handleUserSignIn = async (req, res) => {
+export const handleUserSignIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
     const userData = await User.findOne({ email });
     if (!userData) {
-        return res.status(404).json({
-            message: "User not found",
-            found: false
-        });
+        return next(new AppError("User not found", 404));
     }
 
-    // console.log("User Data:", userData); // Debugging line
-
     const hashedPassword = userData.password;
-
     const isPasswordMatch = await decryptPassword(password, hashedPassword);
 
     if (isPasswordMatch) {
@@ -31,13 +27,10 @@ export const handleUserSignIn = async (req, res) => {
             found: true
         });
     }
-    return res.status(404).json({
-        message: "User is not Authenticated",
-        found: false
-    })
+    return next(new AppError("User is not Authenticated", 401));
+});
 
-}
-export const handleUserSignUp = async (req, res) => {
+export const handleUserSignUp = catchAsync(async (req, res, next) => {
     const { username, email, password } = req.body;
 
     const createdUser = new User({
@@ -46,12 +39,8 @@ export const handleUserSignUp = async (req, res) => {
         password
     });
 
-    // console.log("Created User:", createdUser); // Debugging line
-
     if (!createdUser) {
-        return res.status(400).json({
-            message: "Failed to create user"
-        });
+        return next(new AppError("Failed to create user", 400));
     }
 
     await createdUser.save();
@@ -66,18 +55,14 @@ export const handleUserSignUp = async (req, res) => {
     return res.status(200).json({
         message: "User is has been successfully created",
         User: createdUser
-    })
-}
+    });
+});
 
-
-export const handleUserInfo = async (req, res) => {
+export const handleUserInfo = catchAsync(async (req, res, next) => {
     const userId = req.user?.id;
 
     if (!userId) {
-        return res.status(401).json({
-            message: "Unauthorized access",
-            user: null
-        });
+        return next(new AppError("Unauthorized access", 401));
     }
     const userData = await User.findById(userId).select('-password');
     // console.log("Fetched user data for userId", userId, ":", userData); // Debugging line
@@ -85,51 +70,66 @@ export const handleUserInfo = async (req, res) => {
         message: "User data fetched successfully",
         user: userData
     });
-}
+});
 
-export const handleUpdatePassword = async (req, res) => {
+export const handleUpdatePassword = catchAsync(async (req, res, next) => {
     const userId = req.user?.id;
     const { oldPassword, newPassword } = req.body;
 
     if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return next(new AppError("Unauthorized", 401));
     }
 
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        const isMatch = await decryptPassword(oldPassword, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Incorrect old password" });
-        }
-
-        const hashedPassword = await encryptPassword(newPassword);
-        user.password = hashedPassword;
-        await user.save();
-
-        return res.status(200).json({ message: "Password updated successfully" });
-    } catch (error) {
-        console.error("Update password error:", error);
-        return res.status(500).json({ message: "Internal server error" });
+    const user = await User.findById(userId);
+    if (!user) {
+        return next(new AppError("User not found", 404));
     }
-}
 
-export const handleDeleteUser = async (req, res) => {
+    const isMatch = await decryptPassword(oldPassword, user.password);
+    if (!isMatch) {
+        return next(new AppError("Incorrect old password", 400));
+    }
+
+    const hashedPassword = await encryptPassword(newPassword);
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+});
+
+export const handleDeleteUser = catchAsync(async (req, res, next) => {
     const userId = req.user?.id;
 
     if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return next(new AppError("Unauthorized", 401));
     }
 
-    try {
-        await User.findByIdAndDelete(userId);
-        res.clearCookie("uid");
-        return res.status(200).json({ message: "User account deleted successfully" });
-    } catch (error) {
-        console.error("Delete user error:", error);
-        return res.status(500).json({ message: "Internal server error" });
+    await User.findByIdAndDelete(userId);
+    res.clearCookie("uid");
+    return res.status(200).json({ message: "User account deleted successfully" });
+});
+
+export const handleUpdateProfilePhoto = catchAsync(async (req, res, next) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return next(new AppError("Unauthorized", 401));
     }
-}
+
+    if (!req.file) {
+        return next(new AppError("No file uploaded", 400));
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        return next(new AppError("User not found", 404));
+    }
+
+    user.profilePhoto = req.file.path; // Cloudinary URL
+    await user.save();
+
+    return res.status(200).json({
+        message: "Profile photo updated successfully",
+        profilePhoto: user.profilePhoto
+    });
+});

@@ -8,6 +8,36 @@ function Profile({ user }) {
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    const handlePhotoChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('profilePhoto', file);
+
+        setUploading(true);
+        setMessage('');
+        setError('');
+
+        try {
+            const response = await api.post('/user/profile-photo', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            setMessage(response.data.message);
+            // Optionally update user context or local state to show new photo immediately
+            // For now, we rely on page reload or parent state update if available
+            window.location.reload();
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to upload photo');
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
@@ -40,6 +70,29 @@ function Profile({ user }) {
 
             <div className="max-w-md mx-auto bg-slate-900 p-8 rounded-lg shadow-lg border border-slate-800">
                 <div className="mb-6">
+                    <div className="flex flex-col items-center mb-4">
+                        <div className="w-24 h-24 rounded-full overflow-hidden bg-slate-700 mb-2 border-2 border-indigo-500 relative group">
+                            {user?.profilePhoto ? (
+                                <img src={user.profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-4xl text-slate-500">
+                                    {user?.username?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                            )}
+                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                <label htmlFor="photo-upload" className="text-white text-xs cursor-pointer">Change</label>
+                            </div>
+                        </div>
+                        <input
+                            type="file"
+                            id="photo-upload"
+                            accept="image/*"
+                            onChange={handlePhotoChange}
+                            className="hidden"
+                        />
+                        {uploading && <p className="text-indigo-400 text-sm">Uploading...</p>}
+                    </div>
+
                     <label className="block text-slate-400 text-sm font-bold mb-2">Username</label>
                     <p className="text-xl text-white">{user?.username || user?.name || 'User'}</p>
                 </div>

@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'], // Limits the role to specific values
         default: 'user'
     },
+    profilePhoto: {
+        type: String,
+        default: ''
+    }
 }, { timestamps: true });
 
 
