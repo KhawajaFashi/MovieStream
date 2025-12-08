@@ -1,4 +1,4 @@
-*# Movie Database Application
+# Movie Database Application
 
 A full-stack web application for managing and displaying movie information with search, filtering, and pagination capabilities.
 
