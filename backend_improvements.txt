@@ -1,0 +1,36 @@
+# Backend Issues and Improvements
+
+The following issues were identified in the backend code (`server/`) which prevent the application from functioning correctly.
+
+## Critical Bugs (Blocking)
+
+1.  **Authentication Middleware Blocking Login/Signup**
+    -   **File**: `server/app.js`
+    -   **Issue**: The line `app.use('/api/user', restrictAccessLoggedInUser, userRouter);` applies the `restrictAccessLoggedInUser` middleware to *all* routes in `userRouter`, including `/signin` and `/signup`.
+    -   **Result**: Users cannot log in or sign up because the server requires them to be *already* logged in to access these endpoints. It returns a 401 Unauthorized error.
+    -   **Fix**: Remove `restrictAccessLoggedInUser` from the global `/api/user` mount. Apply it only to specific protected routes if needed.
+
+2.  **Signup Server Crash**
+    -   **File**: `server/controllers/user.js` (Function: `handleUserSignUp`)
+    -   **Issue**: The code calls `const token = setUser(userData);`, but `userData` is not defined in this scope. It should likely be `createdUser`.
+    -   **Result**: The server will crash with a `ReferenceError` whenever a user tries to sign up.
+    -   **Fix**: Change `userData` to `createdUser`.
+
+## Missing Features / Improvements
+
+3.  **Login Response Missing User Data**
+    -   **File**: `server/controllers/user.js` (Function: `handleUserSignIn`)
+    -   **Issue**: The JSON response is `{ message: "User is Authenticated", found: true }`. It does not include the user's details (name, email, etc.).
+    -   **Result**: The frontend cannot display the user's name or profile information after logging in.
+    -   **Fix**: Include the user object in the response: `res.status(200).json({ ..., user: userData })`.
+
+4.  **Missing "Me" Endpoint**
+    -   **File**: `server/routes/user.js`
+    -   **Issue**: There is no endpoint (e.g., `GET /me`) to retrieve the current user's session information.
+    -   **Result**: If the user refreshes the page, the frontend loses the user state and cannot restore it, forcing the user to log in again.
+    -   **Fix**: Add a `GET /me` route that returns `req.user`.
+
+5.  **Cookie Security**
+    -   **File**: `server/controllers/user.js`
+    -   **Observation**: Cookies are set with `secure: true`. This is good for production (HTTPS) but might block cookies on `localhost` (HTTP) depending on the browser.
+    -   **Recommendation**: Use `secure: process.env.NODE_ENV === 'production'`.
