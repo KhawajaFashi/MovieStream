@@ -196,7 +196,7 @@ curl -X POST http://localhost:5000/api/movies \
 
 **Root level:**
 - `npm install` - Install all dependencies
-- `npm run server` - Start backend development server
+- `npm start` - Start backend development server
 - `npm run build` - Build frontend for production
 
 **Client level:**
