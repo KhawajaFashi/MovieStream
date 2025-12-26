@@ -86,7 +86,7 @@ A full-stack web application for managing and displaying movie information with 
    
    Terminal 1 (Backend):
    ```bash
-   npm run server
+   npm start
    ```
    
    Terminal 2 (Frontend):
